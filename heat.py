@@ -18,7 +18,7 @@ def heat(t_surf,
     
     z0=0    
     dz = zmax/(nz+1)
-    dt = tmax/nt
+    dt = (tmax-tmin)/nt
     t = np.linspace(tmin,tmax, nt+1)
     z = np.linspace(dz,zmax, nz+1)
 
