@@ -10,12 +10,17 @@ def heat(t_surf,
          nz = 39,
          nt = 99,
          alpha = 35,
-         accumulation = 0):
+         accumulation = 0,
+         S = np.nan 
+        ):
     
     '''
     Solves the advection/diffusion equation with mixed temperature/heat flux boundary conditions
     '''
     
+    if np.isnan(S).any():
+        S = np.zeros((nz+1,nt+1))
+        
     z0=0    
     dz = zmax/(nz+1)
     dt = (tmax-tmin)/nt
@@ -40,13 +45,13 @@ def heat(t_surf,
     b[nz] =  2*cfl*dz * dTdz
 
     # Initial condition: gradient equal to basal gradient and equal to surface temp.
-    U=np.zeros((nz+1,nt+1))
+    U = np.zeros((nz+1,nt+1))
     U[:,0] = t_surf[0] + z*dTdz
 
     for k in range(nt):
         b[0] = cfl*t_surf[k]    #  Dirichlet boundary condition
 
-        c = U[:,k] + b.flatten()
+        c = U[:,k] + b.flatten() + S[:,k+1]*dt # previous values + dirichlet + sources
         U[:,k+1] = np.linalg.solve(A,c)
 
     return U,t,z
