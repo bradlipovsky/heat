@@ -31,7 +31,8 @@ def heat(t_surf,
     Azz = np.diag([1+2*cfl] * (nz+1)) + np.diag([-cfl] * (nz),k=1)\
         + np.diag([-cfl] * (nz),k=-1)
 
-    w = - accumulation * np.ones(nz)
+#     w = - accumulation * np.ones(nz) # WRONG!
+    w = - accumulation * np.linspace(0,1,nz) # CORRECT!
     abc = w*dt/(2*dz)
     Az = np.diag(abc,k=1) - np.diag(abc,k=-1)
     Az[0,:] =0
